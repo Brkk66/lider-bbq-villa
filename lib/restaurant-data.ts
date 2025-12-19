@@ -1,3 +1,15 @@
+export interface MenuItem {
+  name: string;
+  price: number;
+  description?: string;
+}
+
+export interface MenuCategory {
+  id: string;
+  name: string;
+  items: MenuItem[];
+}
+
 export const restaurantInfo = {
   name: "Lider BBQ Villa",
   tagline: "Authentieke Turkse BBQ Experience",
@@ -27,7 +39,7 @@ export const restaurantInfo = {
   googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=Oudedijk+222B+Rotterdam"
 };
 
-export const menuCategories = [
+export const menuCategories: MenuCategory[] = [
   {
     id: 'pasta',
     name: 'Pasta',
