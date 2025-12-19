@@ -1,0 +1,134 @@
+/* Mobile-specific optimizations for Lider BBQ Villa */
+
+/* Improve touch targets on mobile */
+@media (max-width: 768px) {
+  /* Larger clickable areas for mobile */
+  button,
+  a,
+  [role="button"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Better spacing for mobile menu items */
+  .menu-item {
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  /* Horizontal scrolling for tabs on mobile */
+  .tabs-list {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .tabs-list::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Prevent horizontal page scroll on swipe */
+  .swiper-container {
+    overflow: hidden;
+  }
+
+  /* Better image sizing on mobile */
+  .gallery-image {
+    height: 250px;
+    object-fit: cover;
+  }
+
+  /* Improved text readability */
+  body {
+    font-size: 16px; /* Prevent zoom on iOS */
+  }
+
+  /* Better spacing for mobile cards */
+  .card {
+    margin-bottom: 1rem;
+  }
+
+  /* Sticky CTA button on mobile */
+  .mobile-cta {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 40;
+    width: calc(100% - 40px);
+    max-width: 400px;
+  }
+
+  /* Optimize hero section for mobile */
+  .hero-title {
+    font-size: 2.5rem;
+    line-height: 1.2;
+  }
+
+  /* Better modal/sheet sizing */
+  .sheet-content {
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+
+  /* Improve form inputs on mobile */
+  input,
+  textarea,
+  select {
+    font-size: 16px; /* Prevent zoom on iOS */
+    padding: 12px;
+  }
+
+  /* Better table scrolling on mobile */
+  .table-container {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Optimize animations for mobile performance */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+/* Landscape mobile optimizations */
+@media (max-height: 500px) and (orientation: landscape) {
+  .hero-section {
+    min-height: 100vh;
+    padding: 2rem 0;
+  }
+
+  .navigation {
+    padding: 0.5rem 0;
+  }
+}
+
+/* iOS-specific fixes */
+@supports (-webkit-touch-callout: none) {
+  /* Fix iOS rubber band scrolling */
+  body {
+    position: fixed;
+    width: 100%;
+  }
+
+  /* Better iOS safe area handling */
+  .bottom-nav {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
+
+/* Android-specific optimizations */
+@media (hover: none) and (pointer: coarse) {
+  /* Better touch feedback */
+  .touchable {
+    -webkit-tap-highlight-color: rgba(255, 0, 0, 0.1);
+  }
+}
