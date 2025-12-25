@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { restaurantInfo, features } from '@/lib/restaurant-data';
 import { googleReviews } from '@/lib/reviews-data';
@@ -27,6 +27,8 @@ export default function HomePage() {
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true, align: 'start' });
   const [reviewsRef, reviewsApi] = useEmblaCarousel({ loop: true, align: 'start', slidesToScroll: 1 });
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [reviewsLoaded, setReviewsLoaded] = useState(false);
+  const reviewsRef2 = useRef<HTMLDivElement>(null);
 
 
   const scrollPrev = () => reviewsApi?.scrollPrev();
@@ -46,6 +48,30 @@ export default function HomePage() {
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
+
+  // Lazy load Elfsight widget when reviews section is visible
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && !reviewsLoaded) {
+          // Load the Elfsight script
+          const script = document.createElement('script');
+          script.src = 'https://static.elfsight.com/platform/platform.js';
+          script.async = true;
+          document.body.appendChild(script);
+          setReviewsLoaded(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: '200px' } // Start loading 200px before visible
+    );
+
+    if (reviewsRef2.current) {
+      observer.observe(reviewsRef2.current);
+    }
+
+    return () => observer.disconnect();
+  }, [reviewsLoaded]);
 
   
   const topDishes = [
@@ -325,7 +351,7 @@ export default function HomePage() {
       </section>
 
       {/* Reviews - Elfsight Google Reviews Widget */}
-      <section id="reviews" className="py-24 bg-zinc-900">
+      <section id="reviews" ref={reviewsRef2} className="py-24 bg-zinc-900">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-12">
             <h2 className="text-4xl md:text-5xl font-light mb-2 text-white">
