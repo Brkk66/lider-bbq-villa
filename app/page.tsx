@@ -53,18 +53,31 @@ export default function HomePage() {
       // Find and hide elements containing branding text
       const allElements = document.querySelectorAll('*');
       allElements.forEach(el => {
-        if (el.textContent === 'What Our Customers Say' && el.children.length === 0) {
-          (el as HTMLElement).style.display = 'none';
+        const text = el.textContent?.trim().toLowerCase() || '';
+        if (el.children.length === 0) {
+          if (text === 'what our customers say' ||
+              text.includes('free google reviews') ||
+              text.includes('elfsight') ||
+              text === 'powered by') {
+            (el as HTMLElement).style.display = 'none';
+            // Also hide parent if it's just a wrapper
+            if (el.parentElement && el.parentElement.children.length === 1) {
+              (el.parentElement as HTMLElement).style.display = 'none';
+            }
+          }
         }
       });
 
       // Hide links to elfsight
       document.querySelectorAll('a[href*="elfsight"]').forEach(el => {
         (el as HTMLElement).style.display = 'none';
+        if (el.parentElement) {
+          (el.parentElement as HTMLElement).style.display = 'none';
+        }
       });
 
       // Hide any element with elfsight branding classes
-      document.querySelectorAll('[class*="branding"], [class*="Branding"], [class*="powered"], [class*="Powered"]').forEach(el => {
+      document.querySelectorAll('[class*="branding"], [class*="Branding"], [class*="powered"], [class*="Powered"], [class*="free-widget"]').forEach(el => {
         (el as HTMLElement).style.display = 'none';
       });
     };
