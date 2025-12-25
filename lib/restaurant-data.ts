@@ -23,12 +23,12 @@ export const restaurantInfo = {
     country: "Nederland"
   },
   openingHours: {
-    monday: { open: "16:00", close: "23:00" },
-    tuesday: { open: "16:00", close: "23:00" },
-    wednesday: { open: "16:00", close: "23:00" },
-    thursday: { open: "16:00", close: "23:00" },
-    friday: { open: "16:00", close: "00:00" },
-    saturday: { open: "14:00", close: "00:00" },
+    monday: { open: "16:00", close: "21:00" },
+    tuesday: { open: "16:00", close: "21:00" },
+    wednesday: { open: "16:00", close: "21:00" },
+    thursday: { open: "16:00", close: "21:00" },
+    friday: { open: "16:00", close: "23:00" },
+    saturday: { open: "14:00", close: "23:00" },
     sunday: { open: "14:00", close: "23:00" }
   },
   social: {
