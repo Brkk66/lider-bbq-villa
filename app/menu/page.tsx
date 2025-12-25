@@ -6,6 +6,7 @@ import { restaurantInfo, menuCategories } from '@/lib/restaurant-data';
 import { Button } from '@/components/ui/button';
 import { Phone, ArrowLeft, Menu, X } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default function MenuPage() {
   const [selectedCategory, setSelectedCategory] = useState(menuCategories[0].id);
@@ -33,8 +34,15 @@ export default function MenuPage() {
       {/* Header */}
       <header className="fixed top-0 w-full bg-zinc-950/95 backdrop-blur-sm z-50 border-b border-zinc-800">
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-          <Link href="/" className="text-lg font-medium tracking-tight text-white">
-            Lider BBQ Villa
+          <Link href="/" className="flex items-center">
+            <Image
+              src="/images/logo.png"
+              alt="Lider BBQ Villa"
+              width={140}
+              height={40}
+              className="h-8 w-auto"
+              priority
+            />
           </Link>
 
           {/* Desktop Navigation */}
