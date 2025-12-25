@@ -106,6 +106,9 @@ export default function RootLayout({
 
   return (
     <html lang="nl">
+      <head>
+        <script src="https://static.elfsight.com/platform/platform.js" async></script>
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >

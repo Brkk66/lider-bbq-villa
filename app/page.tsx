@@ -323,73 +323,18 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Reviews - Swipeable Carousel */}
+      {/* Reviews - Elfsight Google Reviews Widget */}
       <section id="reviews" className="py-24 bg-zinc-900">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-12">
-            <div className="flex items-center justify-center gap-1 mb-4">
-              {[...Array(5)].map((_, i) => (
-                <Star key={i} className="w-5 h-5 fill-red-500 text-red-500" />
-              ))}
-            </div>
             <h2 className="text-4xl md:text-5xl font-light mb-2 text-white">
-              {googleReviews.averageRating} Sterren
+              Wat Onze Gasten Zeggen
             </h2>
             <p className="text-zinc-400">
-              {googleReviews.totalReviews} Google Reviews
+              Echte reviews van Google
             </p>
           </div>
-
-          {/* Reviews Carousel */}
-          <div className="relative">
-            <div className="overflow-hidden" ref={reviewsRef}>
-              <div className="flex gap-6">
-                {googleReviews.reviews.map((review) => (
-                  <div key={review.id} className="flex-[0_0_100%] md:flex-[0_0_45%] lg:flex-[0_0_30%] min-w-0">
-                    <div className="bg-zinc-950 border border-zinc-800 rounded-xl p-6 h-full">
-                      <div className="flex items-center gap-3 mb-4">
-                        <div className="w-10 h-10 rounded-full bg-red-600 flex items-center justify-center text-white font-medium">
-                          {review.author.charAt(0)}
-                        </div>
-                        <div className="flex-1">
-                          <p className="font-medium text-sm text-white">{review.author}</p>
-                          <div className="flex gap-0.5 mt-1">
-                            {[...Array(review.rating)].map((_, i) => (
-                              <Star key={i} className="w-3 h-3 fill-red-500 text-red-500" />
-                            ))}
-                          </div>
-                        </div>
-                        <span className="text-xs text-zinc-400">{review.date}</span>
-                      </div>
-                      <p className="text-sm text-zinc-300 leading-relaxed">{review.text}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Navigation Arrows */}
-            <div className="flex gap-2 justify-center mt-8">
-              <Button
-                variant="outline"
-                size="icon"
-                onClick={scrollPrev}
-                aria-label="Vorige review"
-                className="rounded-full border-zinc-700 text-zinc-300 hover:bg-zinc-800"
-              >
-                <ChevronLeft className="w-4 h-4" />
-              </Button>
-              <Button
-                variant="outline"
-                size="icon"
-                onClick={scrollNext}
-                aria-label="Volgende review"
-                className="rounded-full border-zinc-700 text-zinc-300 hover:bg-zinc-800"
-              >
-                <ChevronRight className="w-4 h-4" />
-              </Button>
-            </div>
-          </div>
+          <div className="elfsight-app-8aa0ee3d-653d-473e-b4c1-f0884e2d66f6" data-elfsight-app-lazy></div>
         </div>
       </section>
 
