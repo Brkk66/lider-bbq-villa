@@ -275,7 +275,7 @@ export default function HomePage() {
               </p>
               <h2 className="text-4xl md:text-5xl font-light text-white">Populaire Gerechten</h2>
             </div>
-            <Button variant="outline" size="sm" asChild className="hidden md:flex border-red-600 text-red-500 hover:bg-red-600 hover:text-white">
+            <Button size="sm" asChild className="hidden md:flex bg-red-600 text-white hover:bg-red-700">
               <Link href="/menu">Volledig Menu</Link>
             </Button>
           </div>
@@ -316,7 +316,7 @@ export default function HomePage() {
           </div>
 
           <div className="text-center mt-8 md:hidden">
-            <Button variant="outline" asChild className="w-full border-red-600 text-red-500 hover:bg-red-600 hover:text-white">
+            <Button asChild className="w-full bg-red-600 text-white hover:bg-red-700">
               <Link href="/menu">Volledig Menu</Link>
             </Button>
           </div>
