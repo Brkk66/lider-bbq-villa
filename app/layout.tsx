@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
@@ -106,9 +107,6 @@ export default function RootLayout({
 
   return (
     <html lang="nl">
-      <head>
-        <script src="https://static.elfsight.com/platform/platform.js" async></script>
-      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
@@ -117,6 +115,10 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
         {children}
+        <Script
+          src="https://static.elfsight.com/platform/platform.js"
+          strategy="lazyOnload"
+        />
         <Toaster
           position="bottom-right"
           toastOptions={{
