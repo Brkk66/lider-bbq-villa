@@ -50,50 +50,30 @@ export default function HomePage() {
   // Hide Elfsight branding elements
   useEffect(() => {
     const hideElfsightBranding = () => {
-      // Find and hide elements containing branding text
-      const allElements = document.querySelectorAll('*');
-      allElements.forEach(el => {
-        const text = el.textContent?.trim().toLowerCase() || '';
-        if (el.children.length === 0) {
-          if (text === 'what our customers say' ||
-              text.includes('free google reviews') ||
-              text.includes('elfsight') ||
-              text === 'powered by') {
-            (el as HTMLElement).style.display = 'none';
-            // Also hide parent if it's just a wrapper
-            if (el.parentElement && el.parentElement.children.length === 1) {
-              (el.parentElement as HTMLElement).style.display = 'none';
-            }
-          }
-        }
-      });
-
-      // Hide links to elfsight
+      // Hide links to elfsight and their parents
       document.querySelectorAll('a[href*="elfsight"]').forEach(el => {
-        (el as HTMLElement).style.display = 'none';
-        if (el.parentElement) {
-          (el.parentElement as HTMLElement).style.display = 'none';
+        const parent = el.closest('div');
+        if (parent) parent.remove();
+        else el.remove();
+      });
+
+      // Find and remove elements containing branding text
+      document.querySelectorAll('span, div, p, a').forEach(el => {
+        const text = el.textContent?.trim() || '';
+        if (text === 'What Our Customers Say' ||
+            text === 'Free Google Reviews' ||
+            text.includes('Elfsight') ||
+            text === 'Powered by') {
+          el.remove();
         }
       });
-
-      // Hide any element with elfsight branding classes
-      document.querySelectorAll('[class*="branding"], [class*="Branding"], [class*="powered"], [class*="Powered"], [class*="free-widget"]').forEach(el => {
-        (el as HTMLElement).style.display = 'none';
-      });
     };
 
-    // Run multiple times to catch dynamically loaded content
-    const intervals = [500, 1000, 2000, 3000, 5000];
-    const timeouts = intervals.map(ms => setTimeout(hideElfsightBranding, ms));
+    // Run continuously for first 10 seconds
+    const interval = setInterval(hideElfsightBranding, 200);
+    setTimeout(() => clearInterval(interval), 10000);
 
-    // Also use MutationObserver for dynamic content
-    const observer = new MutationObserver(hideElfsightBranding);
-    observer.observe(document.body, { childList: true, subtree: true });
-
-    return () => {
-      timeouts.forEach(clearTimeout);
-      observer.disconnect();
-    };
+    return () => clearInterval(interval);
   }, []);
 
   const topDishes = [
