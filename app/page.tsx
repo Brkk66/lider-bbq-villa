@@ -47,39 +47,7 @@ export default function HomePage() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Hide Elfsight branding elements
-  useEffect(() => {
-    const hideElfsightBranding = () => {
-      // Only target small elements (spans, small divs, links) - not containers
-      document.querySelectorAll('span, a, p').forEach(el => {
-        const text = el.textContent?.trim() || '';
-        const htmlEl = el as HTMLElement;
-
-        // Only hide if it's a small element (likely branding, not content)
-        if (htmlEl.offsetHeight < 50 && htmlEl.offsetWidth < 300) {
-          if (text === 'What Our Customers Say' ||
-              text === 'Free Google Reviews' ||
-              text.includes('Elfsight') ||
-              text === 'Powered by' ||
-              text === 'bgl') {
-            htmlEl.style.display = 'none';
-          }
-        }
-      });
-
-      // Hide elfsight links
-      document.querySelectorAll('a[href*="elfsight"]').forEach(el => {
-        (el as HTMLElement).style.display = 'none';
-      });
-    };
-
-    // Run periodically
-    const interval = setInterval(hideElfsightBranding, 500);
-    setTimeout(() => clearInterval(interval), 10000);
-
-    return () => clearInterval(interval);
-  }, []);
-
+  
   const topDishes = [
     { name: 'Lider Schotel', price: '€70', desc: 'Mix grill voor 2 personen', tag: 'Bestseller' },
     { name: 'Adana Kebab', price: '€21', desc: 'Gekruid gehakt van de grill', tag: 'Pittig' },
