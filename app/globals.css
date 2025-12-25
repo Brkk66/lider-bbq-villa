@@ -161,13 +161,22 @@
 }
 
 /* Hide Elfsight branding */
+a[href*="elfsight"],
 a[href*="elfsight.com"],
 [class*="eapps-widget-toolbar"],
 [class*="eapps-link"],
 [class*="PoweredBy"],
 [class*="powered-by"],
 [class*="branding"],
-.eapps-widget-toolbar {
+[class*="Branding"],
+[class*="toolbar"],
+[class*="Toolbar"],
+.eapps-widget-toolbar,
+div[style*="elfsight"],
+span[style*="elfsight"],
+[data-elfsight-app-lazy] > div > div:last-child a,
+[class*="google-reviews"] > div:last-child,
+[class*="GoogleReviews"] > div:last-child {
   display: none !important;
   visibility: hidden !important;
   opacity: 0 !important;
@@ -176,4 +185,7 @@ a[href*="elfsight.com"],
   overflow: hidden !important;
   position: absolute !important;
   pointer-events: none !important;
+  font-size: 0 !important;
+  line-height: 0 !important;
+  clip: rect(0,0,0,0) !important;
 }
