@@ -440,16 +440,12 @@ export default function HomePage() {
                     <h3 className="font-medium mb-3 text-white">Openingstijden</h3>
                     <div className="space-y-2 text-sm">
                       <div className="flex justify-between">
-                        <span className="text-zinc-400">Ma - Do</span>
-                        <span className="font-medium text-white">16:00 - 21:00</span>
+                        <span className="text-zinc-400">Ma - Do, Zo</span>
+                        <span className="font-medium text-white">09:00 - 22:00</span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-zinc-400">Vrijdag</span>
-                        <span className="font-medium text-white">16:00 - 23:00</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-zinc-400">Za - Zo</span>
-                        <span className="font-medium text-white">14:00 - 23:00</span>
+                        <span className="text-zinc-400">Vr - Za</span>
+                        <span className="font-medium text-white">09:00 - 23:00</span>
                       </div>
                     </div>
                   </div>

@@ -23,13 +23,13 @@ export const restaurantInfo = {
     country: "Nederland"
   },
   openingHours: {
-    monday: { open: "16:00", close: "21:00" },
-    tuesday: { open: "16:00", close: "21:00" },
-    wednesday: { open: "16:00", close: "21:00" },
-    thursday: { open: "16:00", close: "21:00" },
-    friday: { open: "16:00", close: "23:00" },
-    saturday: { open: "14:00", close: "23:00" },
-    sunday: { open: "14:00", close: "23:00" }
+    monday: { open: "09:00", close: "22:00" },
+    tuesday: { open: "09:00", close: "22:00" },
+    wednesday: { open: "09:00", close: "22:00" },
+    thursday: { open: "09:00", close: "22:00" },
+    friday: { open: "09:00", close: "23:00" },
+    saturday: { open: "09:00", close: "23:00" },
+    sunday: { open: "09:00", close: "22:00" }
   },
   social: {
     instagram: "@restaurantlider",
