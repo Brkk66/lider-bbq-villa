@@ -113,12 +113,6 @@
 
 /* iOS-specific fixes */
 @supports (-webkit-touch-callout: none) {
-  /* Fix iOS rubber band scrolling */
-  body {
-    position: fixed;
-    width: 100%;
-  }
-
   /* Better iOS safe area handling */
   .bottom-nav {
     padding-bottom: env(safe-area-inset-bottom);

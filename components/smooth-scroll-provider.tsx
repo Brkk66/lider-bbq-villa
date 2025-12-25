@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Lenis from 'lenis';
 
 export default function SmoothScrollProvider({
@@ -9,6 +9,15 @@ export default function SmoothScrollProvider({
   children: React.ReactNode;
 }) {
   useEffect(() => {
+    // Disable Lenis on mobile/touch devices - it breaks native scrolling
+    const isMobile = window.matchMedia('(max-width: 768px)').matches ||
+                     'ontouchstart' in window ||
+                     navigator.maxTouchPoints > 0;
+
+    if (isMobile) {
+      return; // Don't initialize Lenis on mobile
+    }
+
     const lenis = new Lenis({
       duration: 1.2,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
@@ -16,7 +25,6 @@ export default function SmoothScrollProvider({
       gestureOrientation: 'vertical',
       smoothWheel: true,
       wheelMultiplier: 1,
-      touchMultiplier: 2,
       infinite: false,
     });
 

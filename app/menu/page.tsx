@@ -1,20 +1,32 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { restaurantInfo, menuCategories } from '@/lib/restaurant-data';
 import { Button } from '@/components/ui/button';
-import { Phone, ArrowLeft } from 'lucide-react';
+import { Phone, ArrowLeft, Menu, X } from 'lucide-react';
 import Link from 'next/link';
 
 export default function MenuPage() {
   const [selectedCategory, setSelectedCategory] = useState(menuCategories[0].id);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const callRestaurant = () => {
     window.location.href = `tel:${restaurantInfo.phone.replace(/\s/g, '')}`;
   };
 
   const currentCategory = menuCategories.find(cat => cat.id === selectedCategory);
+
+  // Close mobile menu on resize to desktop
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 768) {
+        setMobileMenuOpen(false);
+      }
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   return (
     <div className="min-h-screen bg-zinc-950 text-white">
@@ -25,6 +37,7 @@ export default function MenuPage() {
             Lider BBQ Villa
           </Link>
 
+          {/* Desktop Navigation */}
           <nav className="hidden md:flex gap-8 items-center text-sm">
             <Link href="/" className="text-zinc-300 hover:text-red-500 transition">Home</Link>
             <Link href="/menu" className="text-red-500 font-medium">Menu</Link>
@@ -38,7 +51,70 @@ export default function MenuPage() {
               Reserveer
             </Button>
           </nav>
+
+          {/* Mobile Menu Button */}
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="md:hidden p-2 text-white"
+            aria-label="Menu"
+          >
+            {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          </button>
         </div>
+
+        {/* Mobile Menu */}
+        <AnimatePresence>
+          {mobileMenuOpen && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.2 }}
+              className="md:hidden bg-zinc-950 border-t border-zinc-800 overflow-hidden"
+            >
+              <nav className="flex flex-col p-6 gap-4">
+                <Link
+                  href="/"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="text-lg text-white hover:text-red-500 transition py-2"
+                >
+                  Home
+                </Link>
+                <Link
+                  href="/menu"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="text-lg text-red-500 font-medium py-2"
+                >
+                  Menu
+                </Link>
+                <a
+                  href="/#reviews"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="text-lg text-white hover:text-red-500 transition py-2"
+                >
+                  Reviews
+                </a>
+                <a
+                  href="/#contact"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="text-lg text-white hover:text-red-500 transition py-2"
+                >
+                  Contact
+                </a>
+                <Button
+                  onClick={() => {
+                    callRestaurant();
+                    setMobileMenuOpen(false);
+                  }}
+                  className="bg-red-600 hover:bg-red-700 text-white mt-2 w-full"
+                >
+                  <Phone className="w-4 h-4 mr-2" />
+                  Reserveer
+                </Button>
+              </nav>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </header>
 
       {/* Menu Hero */}
@@ -101,7 +177,7 @@ export default function MenuPage() {
                 {/* Category Title */}
                 <div className="mb-8">
                   <h2 className="text-3xl font-light text-white">{currentCategory.name}</h2>
-                  <p className="text-sm text-zinc-500 mt-1">{currentCategory.items.length} gerechten</p>
+                  <p className="text-sm text-zinc-400 mt-1">{currentCategory.items.length} gerechten</p>
                 </div>
 
                 {/* Menu Items Grid */}
@@ -145,9 +221,9 @@ export default function MenuPage() {
       <section className="py-16 bg-zinc-900">
         <div className="max-w-6xl mx-auto px-6">
           <div className="bg-gradient-to-br from-red-600 to-red-700 text-white p-10 md:p-14 rounded-2xl text-center shadow-lg">
-            <h3 className="text-3xl font-light mb-4">
+            <h2 className="text-3xl font-light mb-4">
               Klaar om te bestellen?
-            </h3>
+            </h2>
             <p className="text-red-100 mb-8 max-w-md mx-auto">
               Bel ons voor reserveringen of kom gezellig langs
             </p>
@@ -162,8 +238,7 @@ export default function MenuPage() {
               </Button>
               <Button
                 size="lg"
-                variant="outline"
-                className="border-white text-white hover:bg-red-800"
+                className="bg-zinc-900 text-white hover:bg-zinc-800"
                 asChild
               >
                 <Link href="/">Terug naar Home</Link>
@@ -178,19 +253,19 @@ export default function MenuPage() {
         <div className="max-w-6xl mx-auto px-6">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center text-sm">
             <div>
-              <h4 className="font-medium text-white mb-2">Allergieën</h4>
+              <h3 className="font-medium text-white mb-2">Allergieën</h3>
               <p className="text-zinc-400">
                 Heeft u allergieën? Laat het ons weten
               </p>
             </div>
             <div>
-              <h4 className="font-medium text-white mb-2">100% Halal</h4>
+              <h3 className="font-medium text-white mb-2">100% Halal</h3>
               <p className="text-zinc-400">
                 Al ons vlees is halal gecertificeerd
               </p>
             </div>
             <div>
-              <h4 className="font-medium text-white mb-2">Groepen</h4>
+              <h3 className="font-medium text-white mb-2">Groepen</h3>
               <p className="text-zinc-400">
                 Bel voor groepen vanaf 8 personen
               </p>
@@ -203,11 +278,16 @@ export default function MenuPage() {
       <footer className="bg-zinc-900 border-t border-zinc-800 py-12">
         <div className="max-w-7xl mx-auto px-6 text-center">
           <p className="text-lg font-medium text-white mb-2">Lider BBQ Villa</p>
-          <p className="text-sm text-zinc-400 mb-1">
+          <p className="text-sm text-zinc-400 mb-4">
             {restaurantInfo.address.street}, {restaurantInfo.address.postcode} {restaurantInfo.address.city}
           </p>
-          <p className="text-xs text-zinc-500">
-            © 2024 Lider BBQ Villa. Alle rechten voorbehouden.
+          <div className="flex justify-center gap-6 mb-4">
+            <Link href="/privacy" className="text-xs text-zinc-400 hover:text-red-500 transition">
+              Privacyverklaring
+            </Link>
+          </div>
+          <p className="text-xs text-zinc-400">
+            © 2025 Lider BBQ Villa. Alle rechten voorbehouden.
           </p>
         </div>
       </footer>

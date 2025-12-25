@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { restaurantInfo, features } from '@/lib/restaurant-data';
 import { googleReviews } from '@/lib/reviews-data';
 import { Button } from '@/components/ui/button';
@@ -15,17 +15,19 @@ import {
   Flame,
   Beef,
   Home,
-  CheckCircle2
+  CheckCircle2,
+  Menu,
+  X
 } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
 import useEmblaCarousel from 'embla-carousel-react';
 
 export default function HomePage() {
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true, align: 'start' });
   const [reviewsRef, reviewsApi] = useEmblaCarousel({ loop: true, align: 'start', slidesToScroll: 1 });
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  const { scrollYProgress } = useScroll();
-  const heroOpacity = useTransform(scrollYProgress, [0, 0.3], [1, 0]);
 
   const scrollPrev = () => reviewsApi?.scrollPrev();
   const scrollNext = () => reviewsApi?.scrollNext();
@@ -33,6 +35,17 @@ export default function HomePage() {
   const callRestaurant = () => {
     window.location.href = `tel:${restaurantInfo.phone.replace(/\s/g, '')}`;
   };
+
+  // Close mobile menu on resize to desktop
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 768) {
+        setMobileMenuOpen(false);
+      }
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const topDishes = [
     { name: 'Lider Schotel', price: '€70', desc: 'Mix grill voor 2 personen', tag: 'Bestseller' },
@@ -49,6 +62,7 @@ export default function HomePage() {
             Lider BBQ Villa
           </Link>
 
+          {/* Desktop Navigation */}
           <nav className="hidden md:flex gap-8 items-center text-sm">
             <Link href="/" className="text-zinc-300 hover:text-red-500 transition">Home</Link>
             <Link href="/menu" className="text-zinc-300 hover:text-red-500 transition">Menu</Link>
@@ -62,20 +76,91 @@ export default function HomePage() {
               {restaurantInfo.phone}
             </Button>
           </nav>
+
+          {/* Mobile Menu Button */}
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="md:hidden p-2 text-white"
+            aria-label="Menu"
+          >
+            {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          </button>
         </div>
+
+        {/* Mobile Menu */}
+        <AnimatePresence>
+          {mobileMenuOpen && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.2 }}
+              className="md:hidden bg-zinc-950 border-t border-zinc-800 overflow-hidden"
+            >
+              <nav className="flex flex-col p-6 gap-4">
+                <Link
+                  href="/"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="text-lg text-white hover:text-red-500 transition py-2"
+                >
+                  Home
+                </Link>
+                <Link
+                  href="/menu"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="text-lg text-white hover:text-red-500 transition py-2"
+                >
+                  Menu
+                </Link>
+                <a
+                  href="#reviews"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="text-lg text-white hover:text-red-500 transition py-2"
+                >
+                  Reviews
+                </a>
+                <a
+                  href="#contact"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="text-lg text-white hover:text-red-500 transition py-2"
+                >
+                  Contact
+                </a>
+                <Button
+                  onClick={() => {
+                    callRestaurant();
+                    setMobileMenuOpen(false);
+                  }}
+                  className="bg-red-600 hover:bg-red-700 text-white mt-2 w-full"
+                >
+                  <Phone className="w-4 h-4 mr-2" />
+                  {restaurantInfo.phone}
+                </Button>
+              </nav>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </header>
 
       {/* Hero - Clean & Minimal */}
       <section className="relative h-screen flex items-center overflow-hidden">
         {/* Background Image */}
         <div className="absolute inset-0">
-          <img
-            src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1920&q=80"
+          <Image
+            src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1280&q=75&auto=format"
             alt="Restaurant interior"
-            className="w-full h-full object-cover"
+            fill
+            priority
+            fetchPriority="high"
+            className="object-cover"
+            sizes="100vw"
+            placeholder="blur"
+            blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAMCAgMCAgMDAwMEAwMEBQgFBQQEBQoHBwYIDAoMCwsKCwsNDhIQDQ4RDgsLEBYQERMUFRUVDA8XGBYUGBIUFRT/2wBDAQMEBAUEBQkFBQkUDQsNFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBT/wAARCAAIAAoDASIAAhEBAxEB/8QAFgABAQEAAAAAAAAAAAAAAAAAAAYH/8QAIhAAAgEDBAMBAAAAAAAAAAAAAQIDAAQRBQYSIRMxQWH/xAAVAQEBAAAAAAAAAAAAAAAAAAADBP/EABkRAAIDAQAAAAAAAAAAAAAAAAECAAMRIf/aAAwDAQACEQMRAD8AvNi7Z0+20+K+u7GCW8upXlkkdAxLEnA6Pp9n0avTt7TiqoNNtgqjAHhXgClKiZ2Y+TM4ibP/2Q=="
           />
-          {/* Dark overlay for better text readability */}
-          <div className="absolute inset-0 bg-zinc-950/70" />
+          {/* Premium gradient overlay */}
+          <div className="absolute inset-0 bg-gradient-to-b from-zinc-950/80 via-zinc-950/60 to-zinc-950/90" />
+          {/* Subtle red accent glow */}
+          <div className="absolute bottom-0 left-1/4 w-96 h-96 bg-red-600/10 rounded-full blur-3xl" />
         </div>
 
         <div className="relative max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 w-full">
@@ -108,9 +193,8 @@ export default function HomePage() {
               </Button>
               <Button
                 size="lg"
-                variant="outline"
                 onClick={callRestaurant}
-                className="border-2 border-white text-white hover:bg-white hover:text-zinc-950 text-base h-14 px-8"
+                className="bg-white text-zinc-950 hover:bg-zinc-100 text-base h-14 px-8"
               >
                 <Phone className="w-5 h-5 mr-2" />
                 {restaurantInfo.phone}
@@ -120,10 +204,10 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Features - Minimal Cards */}
-      <section className="py-24 bg-zinc-900">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+      {/* Features */}
+      <section className="py-10 bg-zinc-900 border-b border-zinc-800">
+        <div className="max-w-5xl mx-auto px-6">
+          <div className="flex flex-wrap justify-center gap-x-10 gap-y-4">
             {features.map((feature, i) => {
               const IconComponent =
                 feature.icon === 'flame' ? Flame :
@@ -132,20 +216,10 @@ export default function HomePage() {
                 CheckCircle2;
 
               return (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.1 }}
-                  className="text-center"
-                >
-                  <div className="flex justify-center mb-4">
-                    <IconComponent className="w-12 h-12 text-red-500" strokeWidth={1.5} />
-                  </div>
-                  <h3 className="font-medium mb-2 text-white">{feature.title}</h3>
-                  <p className="text-sm text-zinc-400">{feature.description}</p>
-                </motion.div>
+                <div key={i} className="flex items-center gap-2">
+                  <IconComponent className="w-4 h-4 text-red-500" strokeWidth={2} />
+                  <span className="text-zinc-400 text-sm">{feature.title}</span>
+                </div>
               );
             })}
           </div>
@@ -153,70 +227,46 @@ export default function HomePage() {
       </section>
 
       {/* Over Ons */}
-      <section className="pt-24 pb-12 bg-zinc-950">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+      <section className="py-20 bg-zinc-900">
+        <div className="max-w-6xl mx-auto px-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             {/* Image */}
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="relative h-[500px] rounded-2xl overflow-hidden"
-            >
-              <img
+            <div className="relative h-[400px] rounded-2xl overflow-hidden">
+              <Image
                 src="/images/lidereten.webp"
                 alt="Lider BBQ Villa - Authentieke Turkse BBQ schotel met gegrild vlees"
-                className="w-full h-full object-cover"
+                fill
+                className="object-cover"
+                sizes="(max-width: 1024px) 100vw, 50vw"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/60 to-transparent" />
-            </motion.div>
+            </div>
 
             {/* Content */}
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-            >
-              <p className="text-sm font-medium text-red-500 mb-3 tracking-wide uppercase">
-                Over Ons
-              </p>
-              <h2 className="text-4xl md:text-5xl font-light mb-6 text-white">
-                De Smaak van <span className="text-red-500">Anatolië</span>
+            <div>
+              <h2 className="text-3xl md:text-4xl font-light mb-4 text-white">
+                Authentieke Turkse <span className="text-red-500">BBQ</span>
               </h2>
-              <div className="space-y-4 text-zinc-300 leading-relaxed">
-                <p>
-                  Bij Lider BBQ Villa serveren we authentieke Turkse gerechten met een moderne twist.
-                  Onze passie voor kwaliteit en traditie komt samen in elk gerecht dat we maken.
-                </p>
-                <p>
-                  Van de grill tot aan je tafel - elk ingrediënt wordt dagelijks vers bereid door
-                  onze ervaren koks. We gebruiken alleen de beste producten en traditionele recepten
-                  die van generatie op generatie zijn doorgegeven.
-                </p>
-                <p>
-                  Of je nu komt voor onze beroemde Lider Schotel, een klassieke İskender, of een
-                  van onze andere specialiteiten - bij ons proef je de echte smaak van Turkije,
-                  midden in Rotterdam.
-                </p>
-              </div>
-              <div className="mt-8">
-                <Button
-                  size="lg"
-                  asChild
-                  className="bg-red-600 hover:bg-red-700 text-white"
-                >
-                  <Link href="/menu">Ontdek Ons Menu</Link>
-                </Button>
-              </div>
-            </motion.div>
+              <p className="text-zinc-400 leading-relaxed mb-6">
+                Bij Lider BBQ Villa serveren we authentieke Turkse gerechten, vers bereid door onze ervaren koks. Van de beroemde Lider Schotel tot klassieke İskender - proef de echte smaak van Turkije in Rotterdam.
+              </p>
+
+              <Button
+                size="lg"
+                asChild
+                className="bg-red-600 hover:bg-red-700 text-white"
+              >
+                <Link href="/menu">Bekijk Menu</Link>
+              </Button>
+            </div>
           </div>
         </div>
       </section>
 
       {/* Top Gerechten - Swipeable */}
-      <section className="pt-12 pb-24 bg-zinc-950">
+      <section className="pt-12 pb-24 bg-zinc-950 relative">
+        {/* Decorative line */}
+        <div className="absolute top-0 left-0 right-0 gradient-line" />
+
         <div className="max-w-7xl mx-auto px-6">
           <div className="flex justify-between items-end mb-12">
             <div>
@@ -234,14 +284,14 @@ export default function HomePage() {
           <div className="overflow-hidden md:hidden" ref={emblaRef}>
             <div className="flex gap-4">
               {topDishes.map((dish, i) => (
-                <div key={i} className="flex-[0_0_85%] min-w-0">
-                  <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6 hover:shadow-lg hover:shadow-red-900/20 transition">
-                    <div className="flex justify-between items-start mb-4">
-                      <span className="text-xs px-3 py-1 bg-red-600/20 text-red-500 rounded-full">{dish.tag}</span>
-                      <span className="text-2xl font-medium text-red-500">{dish.price}</span>
+                <div key={i} className="flex-[0_0_80%] min-w-0">
+                  <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-5">
+                    <div className="flex justify-between items-start mb-2">
+                      <span className="text-xs px-2 py-1 bg-red-600/10 text-red-400 rounded-full">{dish.tag}</span>
+                      <span className="text-lg font-semibold text-white">{dish.price}</span>
                     </div>
-                    <h3 className="text-xl font-medium mb-2 text-white">{dish.name}</h3>
-                    <p className="text-sm text-zinc-400">{dish.desc}</p>
+                    <h3 className="text-base font-medium text-white">{dish.name}</h3>
+                    <p className="text-sm text-zinc-400 mt-1">{dish.desc}</p>
                   </div>
                 </div>
               ))}
@@ -251,12 +301,15 @@ export default function HomePage() {
           {/* Desktop grid */}
           <div className="hidden md:grid grid-cols-3 gap-6">
             {topDishes.map((dish, i) => (
-              <div key={i} className="bg-zinc-900 border border-zinc-800 rounded-xl p-8 hover:shadow-lg hover:shadow-red-900/20 transition">
-                <div className="flex justify-between items-start mb-4">
-                  <span className="text-xs px-3 py-1 bg-red-600/20 text-red-500 rounded-full">{dish.tag}</span>
-                  <span className="text-2xl font-medium text-red-500">{dish.price}</span>
+              <div
+                key={i}
+                className="group bg-zinc-900 border border-zinc-800 rounded-xl p-6 hover:border-red-500/30 transition-colors"
+              >
+                <div className="flex justify-between items-start mb-3">
+                  <span className="text-xs px-2 py-1 bg-red-600/10 text-red-400 rounded-full">{dish.tag}</span>
+                  <span className="text-xl font-semibold text-white">{dish.price}</span>
                 </div>
-                <h3 className="text-xl font-medium mb-2 text-white">{dish.name}</h3>
+                <h3 className="text-lg font-medium mb-1 text-white">{dish.name}</h3>
                 <p className="text-sm text-zinc-400">{dish.desc}</p>
               </div>
             ))}
@@ -299,14 +352,14 @@ export default function HomePage() {
                           {review.author.charAt(0)}
                         </div>
                         <div className="flex-1">
-                          <h4 className="font-medium text-sm text-white">{review.author}</h4>
+                          <p className="font-medium text-sm text-white">{review.author}</p>
                           <div className="flex gap-0.5 mt-1">
                             {[...Array(review.rating)].map((_, i) => (
                               <Star key={i} className="w-3 h-3 fill-red-500 text-red-500" />
                             ))}
                           </div>
                         </div>
-                        <span className="text-xs text-zinc-500">{review.date}</span>
+                        <span className="text-xs text-zinc-400">{review.date}</span>
                       </div>
                       <p className="text-sm text-zinc-300 leading-relaxed">{review.text}</p>
                     </div>
@@ -321,6 +374,7 @@ export default function HomePage() {
                 variant="outline"
                 size="icon"
                 onClick={scrollPrev}
+                aria-label="Vorige review"
                 className="rounded-full border-zinc-700 text-zinc-300 hover:bg-zinc-800"
               >
                 <ChevronLeft className="w-4 h-4" />
@@ -329,6 +383,7 @@ export default function HomePage() {
                 variant="outline"
                 size="icon"
                 onClick={scrollNext}
+                aria-label="Volgende review"
                 className="rounded-full border-zinc-700 text-zinc-300 hover:bg-zinc-800"
               >
                 <ChevronRight className="w-4 h-4" />
@@ -428,11 +483,16 @@ export default function HomePage() {
       <footer className="bg-zinc-900 border-t border-zinc-800 py-12">
         <div className="max-w-7xl mx-auto px-6 text-center">
           <p className="text-lg font-medium mb-2 text-white">Lider BBQ Villa</p>
-          <p className="text-sm text-zinc-400 mb-1">
+          <p className="text-sm text-zinc-400 mb-4">
             {restaurantInfo.address.street}, {restaurantInfo.address.postcode} {restaurantInfo.address.city}
           </p>
-          <p className="text-xs text-zinc-500">
-            © 2024 Lider BBQ Villa. Alle rechten voorbehouden.
+          <div className="flex justify-center gap-6 mb-4">
+            <Link href="/privacy" className="text-xs text-zinc-400 hover:text-red-500 transition">
+              Privacyverklaring
+            </Link>
+          </div>
+          <p className="text-xs text-zinc-400">
+            © 2025 Lider BBQ Villa. Alle rechten voorbehouden.
           </p>
         </div>
       </footer>

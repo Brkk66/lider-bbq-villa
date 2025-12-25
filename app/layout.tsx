@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import SmoothScrollProvider from "@/components/smooth-scroll-provider";
 import { Toaster } from "@/components/ui/sonner";
 
 const geistSans = Geist({
@@ -15,15 +14,27 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Lider BBQ Villa - Authentieke Turkse BBQ Restaurant Rotterdam",
+  metadataBase: new URL('https://lider-bbq-villa.vercel.app'),
+  title: {
+    default: "Lider BBQ Villa - Authentieke Turkse BBQ Restaurant Rotterdam",
+    template: "%s | Lider BBQ Villa"
+  },
   description: "Proef de echte smaken van Anatolië in het hart van Rotterdam. Authentieke Turkse BBQ, verse ingrediënten, warme sfeer. Reserveer nu!",
-  keywords: "Turkse restaurant Rotterdam, BBQ, Grill, Kebab, Halal restaurant, Lider BBQ Villa, Turkish food",
+  keywords: ["Turkse restaurant Rotterdam", "BBQ", "Grill", "Kebab", "Halal restaurant", "Lider BBQ Villa", "Turkish food", "Rotterdam Oost", "Oudedijk"],
+  authors: [{ name: "Lider BBQ Villa" }],
+  creator: "Lider BBQ Villa",
+  publisher: "Lider BBQ Villa",
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
   openGraph: {
     title: "Lider BBQ Villa - Authentieke Turkse BBQ Restaurant",
     description: "Proef de echte smaken van Anatolië in het hart van Rotterdam",
     type: "website",
     locale: "nl_NL",
-    url: "https://liderbbqvilla.nl",
+    url: "https://lider-bbq-villa.vercel.app",
     siteName: "Lider BBQ Villa",
     images: [
       {
@@ -38,7 +49,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Lider BBQ Villa - Authentieke Turkse BBQ Restaurant",
     description: "Proef de echte smaken van Anatolië in het hart van Rotterdam",
-    images: ["/twitter-image.jpg"],
+    images: ["/og-image.jpg"],
   },
   robots: {
     index: true,
@@ -50,7 +61,10 @@ export const metadata: Metadata = {
       'max-image-preview': 'large',
       'max-snippet': -1,
     },
-  }
+  },
+  alternates: {
+    canonical: '/',
+  },
 };
 
 export default function RootLayout({
@@ -64,12 +78,12 @@ export default function RootLayout({
     name: 'Lider BBQ Villa',
     description: 'Authentieke Turkse BBQ Restaurant in Rotterdam',
     url: 'https://liderbbqvilla.nl',
-    telephone: '+31-10-123-4567',
+    telephone: '+31-10-203-7269',
     address: {
       '@type': 'PostalAddress',
-      streetAddress: 'Beijerlandselaan 123',
+      streetAddress: 'Oudedijk 222B',
       addressLocality: 'Rotterdam',
-      postalCode: '3074 XX',
+      postalCode: '3061 AT',
       addressCountry: 'NL'
     },
     servesCuisine: 'Turkish',
@@ -105,9 +119,7 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
-        <SmoothScrollProvider>
-          {children}
-        </SmoothScrollProvider>
+        {children}
         <Toaster
           position="bottom-right"
           toastOptions={{
