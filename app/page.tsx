@@ -50,30 +50,55 @@ export default function HomePage() {
   // Hide Elfsight branding elements
   useEffect(() => {
     const hideElfsightBranding = () => {
-      // Hide links to elfsight and their parents
+      // Target the widget container directly
+      const widget = document.querySelector('.elfsight-app-8aa0ee3d-653d-473e-b4c1-f0884e2d66f6');
+      if (widget) {
+        // Hide first child (header with "What Our Customers Say")
+        const firstChild = widget.querySelector(':scope > div > div:first-child');
+        if (firstChild) (firstChild as HTMLElement).style.cssText = 'display:none!important;height:0!important;overflow:hidden!important;';
+
+        // Hide last child (branding)
+        const lastChild = widget.querySelector(':scope > div > div:last-child');
+        if (lastChild && lastChild !== firstChild) {
+          const text = lastChild.textContent?.toLowerCase() || '';
+          if (text.includes('elfsight') || text.includes('free') || text.includes('powered')) {
+            (lastChild as HTMLElement).style.cssText = 'display:none!important;height:0!important;overflow:hidden!important;';
+          }
+        }
+      }
+
+      // Also target by text content as backup
       document.querySelectorAll('a[href*="elfsight"]').forEach(el => {
-        const parent = el.closest('div');
-        if (parent) parent.remove();
-        else el.remove();
+        (el as HTMLElement).style.cssText = 'display:none!important;';
+        el.parentElement && ((el.parentElement as HTMLElement).style.cssText = 'display:none!important;');
       });
 
-      // Find and remove elements containing branding text
-      document.querySelectorAll('span, div, p, a').forEach(el => {
-        const text = el.textContent?.trim() || '';
-        if (text === 'What Our Customers Say' ||
-            text === 'Free Google Reviews' ||
-            text.includes('Elfsight') ||
-            text === 'Powered by') {
-          el.remove();
+      // Target any element with branding text
+      const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+      let node;
+      while (node = walker.nextNode()) {
+        const text = node.textContent?.trim().toLowerCase() || '';
+        if (text === 'what our customers say' ||
+            text === 'free google reviews' ||
+            text.includes('elfsight') ||
+            text === 'powered by') {
+          const parent = node.parentElement;
+          if (parent) parent.style.cssText = 'display:none!important;height:0!important;';
         }
-      });
+      }
     };
 
-    // Run continuously for first 10 seconds
-    const interval = setInterval(hideElfsightBranding, 200);
-    setTimeout(() => clearInterval(interval), 10000);
+    // Run aggressively
+    hideElfsightBranding();
+    const interval = setInterval(hideElfsightBranding, 100);
 
-    return () => clearInterval(interval);
+    // Keep running for 15 seconds
+    const cleanup = setTimeout(() => clearInterval(interval), 15000);
+
+    return () => {
+      clearInterval(interval);
+      clearTimeout(cleanup);
+    };
   }, []);
 
   const topDishes = [
