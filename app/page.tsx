@@ -47,6 +47,42 @@ export default function HomePage() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  // Hide Elfsight branding elements
+  useEffect(() => {
+    const hideElfsightBranding = () => {
+      // Find and hide elements containing branding text
+      const allElements = document.querySelectorAll('*');
+      allElements.forEach(el => {
+        if (el.textContent === 'What Our Customers Say' && el.children.length === 0) {
+          (el as HTMLElement).style.display = 'none';
+        }
+      });
+
+      // Hide links to elfsight
+      document.querySelectorAll('a[href*="elfsight"]').forEach(el => {
+        (el as HTMLElement).style.display = 'none';
+      });
+
+      // Hide any element with elfsight branding classes
+      document.querySelectorAll('[class*="branding"], [class*="Branding"], [class*="powered"], [class*="Powered"]').forEach(el => {
+        (el as HTMLElement).style.display = 'none';
+      });
+    };
+
+    // Run multiple times to catch dynamically loaded content
+    const intervals = [500, 1000, 2000, 3000, 5000];
+    const timeouts = intervals.map(ms => setTimeout(hideElfsightBranding, ms));
+
+    // Also use MutationObserver for dynamic content
+    const observer = new MutationObserver(hideElfsightBranding);
+    observer.observe(document.body, { childList: true, subtree: true });
+
+    return () => {
+      timeouts.forEach(clearTimeout);
+      observer.disconnect();
+    };
+  }, []);
+
   const topDishes = [
     { name: 'Lider Schotel', price: '€70', desc: 'Mix grill voor 2 personen', tag: 'Bestseller' },
     { name: 'Adana Kebab', price: '€21', desc: 'Gekruid gehakt van de grill', tag: 'Pittig' },
