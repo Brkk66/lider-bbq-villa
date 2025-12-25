@@ -160,7 +160,7 @@
   background: linear-gradient(90deg, transparent, rgba(239, 68, 68, 0.5), transparent);
 }
 
-/* Hide Elfsight branding */
+/* Hide Elfsight branding and extra headers */
 a[href*="elfsight"],
 a[href*="elfsight.com"],
 [class*="eapps-widget-toolbar"],
@@ -171,12 +171,19 @@ a[href*="elfsight.com"],
 [class*="Branding"],
 [class*="toolbar"],
 [class*="Toolbar"],
+[class*="Header"],
+[class*="header-title"],
+[class*="widget-header"],
+[class*="title-wrapper"],
 .eapps-widget-toolbar,
 div[style*="elfsight"],
 span[style*="elfsight"],
 [data-elfsight-app-lazy] > div > div:last-child a,
 [class*="google-reviews"] > div:last-child,
-[class*="GoogleReviews"] > div:last-child {
+[class*="GoogleReviews"] > div:last-child,
+[class*="eapps-google-reviews-title"],
+[class*="es-header"],
+[class*="es-title"] {
   display: none !important;
   visibility: hidden !important;
   opacity: 0 !important;
@@ -188,4 +195,20 @@ span[style*="elfsight"],
   font-size: 0 !important;
   line-height: 0 !important;
   clip: rect(0,0,0,0) !important;
+}
+
+/* Hide "What Our Customers Say" text */
+.elfsight-app-8aa0ee3d-653d-473e-b4c1-f0884e2d66f6 h1,
+.elfsight-app-8aa0ee3d-653d-473e-b4c1-f0884e2d66f6 h2,
+.elfsight-app-8aa0ee3d-653d-473e-b4c1-f0884e2d66f6 h3,
+.elfsight-app-8aa0ee3d-653d-473e-b4c1-f0884e2d66f6 > div > div:first-child > div:first-child {
+  display: none !important;
+}
+
+/* Hide bottom branding logo */
+.elfsight-app-8aa0ee3d-653d-473e-b4c1-f0884e2d66f6 img[src*="logo"],
+.elfsight-app-8aa0ee3d-653d-473e-b4c1-f0884e2d66f6 svg[class*="logo"],
+.elfsight-app-8aa0ee3d-653d-473e-b4c1-f0884e2d66f6 > div > div:last-child {
+  display: none !important;
+  visibility: hidden !important;
 }
