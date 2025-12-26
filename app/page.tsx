@@ -76,7 +76,7 @@ export default function HomePage() {
   
   const topDishes = [
     { name: 'Lider Schotel', price: '€70', desc: 'Mix grill voor 2 personen', tag: 'Bestseller' },
-    { name: 'Adana Kebab', price: '€21', desc: 'Gekruid gehakt van de grill', tag: 'Pittig' },
+    { name: 'All You Can Eat', price: '€...', desc: 'Onbeperkt genieten van onze gerechten', tag: 'Populair' },
     { name: 'İskender', price: '€22.50', desc: 'Döner met yoghurt & tomatensaus', tag: 'Klassiek' }
   ];
 

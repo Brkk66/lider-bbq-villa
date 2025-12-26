@@ -41,6 +41,13 @@ export const restaurantInfo = {
 
 export const menuCategories: MenuCategory[] = [
   {
+    id: 'allyoucaneat',
+    name: 'All You Can Eat',
+    items: [
+      { name: 'All You Can Eat', price: 0, description: 'Onbeperkt genieten van onze heerlijke gerechten' },
+    ]
+  },
+  {
     id: 'pasta',
     name: 'Pasta',
     items: [
